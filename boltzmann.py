@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
+import pandas as pd
 from mesa import Agent, Model
 from mesa.time import RandomActivation
 import logging
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -42,5 +44,8 @@ class MoneyModel(Model):
         for _ in range(num_steps):
             self.step()
 
-m = MoneyModel(10)
+m = MoneyModel(100)
 m.run()
+
+wealths = pd.Series([ a.wealth for a in m.schedule.agents ])
+wealths.plot(kind="hist",bins=range(0,max(wealths)+1))
