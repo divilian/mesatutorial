@@ -14,6 +14,13 @@ class MoneyAgent(Agent):
     def step(self):
         logging.info("Running agent {}! (currently ${})".format(
             self.unique_id, self.wealth))
+        if self.wealth == 0:
+            return
+        other = self.random.choice(self.model.schedule.agents)
+        if self == other:
+            logging.info("Trading with myself!")
+        other.wealth += 1
+        self.wealth -= 1
         
 
 class MoneyModel(Model):
