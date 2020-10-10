@@ -24,15 +24,23 @@ class MoneyAgent(Agent):
         
 
 class MoneyModel(Model):
+
     def __init__(self, N):
         self.num_agents = N
         self.schedule = RandomActivation(self)
+        self.num_steps = 0
         for i in range(self.num_agents):
             a = MoneyAgent(i, self)
             self.schedule.add(a)
 
     def step(self):
+        self.num_steps += 1
+        logging.info("Iteration {}...".format(self.num_steps))
         self.schedule.step()
 
+    def run(self, num_steps=50):
+        for _ in range(num_steps):
+            self.step()
+
 m = MoneyModel(10)
-m.step()
+m.run()
