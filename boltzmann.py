@@ -2,6 +2,9 @@
 
 from mesa import Agent, Model
 from mesa.time import RandomActivation
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 class MoneyAgent(Agent):
     def __init__(self, unique_id, model):
@@ -9,8 +12,8 @@ class MoneyAgent(Agent):
         self.wealth = 1
 
     def step(self):
-        print("Running agent {}! (currently ${})".format(self.unique_id,
-            self.wealth))
+        logging.info("Running agent {}! (currently ${})".format(
+            self.unique_id, self.wealth))
         
 
 class MoneyModel(Model):
