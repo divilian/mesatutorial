@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
     if len(sys.argv) <= 1:
         print("Usage: boltzmann.py single|batch.")
-        sys.exit(1)
+        sys.exit()
 
     if sys.argv[1] == "single":
 
