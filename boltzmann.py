@@ -91,6 +91,7 @@ if __name__ == "__main__":
         for step in wealths.index.get_level_values("Step").unique():
             wealths.xs(step, level="Step").plot(kind="hist", density=True,
                 bins=range(0,max_wealth_ever+1))
+            plt.ylim((0,.6))
             plt.title("Iteration {} of {}".format(step+1, max_iter+1))
             plt.savefig("/tmp/wealth{:03d}.png".format(step))
             plt.close()
