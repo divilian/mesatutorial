@@ -35,6 +35,8 @@ class MoneyAgent(Agent):
     def step(self):
         logging.info("Running agent {}! (currently ${})".format(
             self.unique_id, self.wealth))
+        # self.wealth += 1     Justin: increase $$ flat rate to agents
+        # self.wealth *= 1.05  Brandon: wealth has investment value
         if self.wealth > 0:
             self.give_money()
 
@@ -90,7 +92,7 @@ if __name__ == "__main__":
         subprocess.run(["rm", "-f"] + files_to_delete + ["/tmp/animation.gif"])
         for step in wealths.index.get_level_values("Step").unique():
             wealths.xs(step, level="Step").plot(kind="hist", density=True,
-                bins=range(0,max_wealth_ever+1))
+                bins=range(0,int(max_wealth_ever+1)))
             plt.ylim((0,.6))
             plt.title("Iteration {} of {}".format(step+1, max_iter+1))
             plt.savefig("/tmp/wealth{:03d}.png".format(step))
