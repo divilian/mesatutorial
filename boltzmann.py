@@ -58,7 +58,8 @@ class MoneyModel(Model):
             a = agent_class(i, self)
             self.schedule.add(a)
         self.datacollector = DataCollector(
-            agent_reporters={"agent_wealth": "wealth"})
+            agent_reporters={"agent_wealth": "wealth"},
+            model_reporters={"Gini": compute_gini})
         self.running = True   # could set this to stop prematurely
 
     def step(self):
