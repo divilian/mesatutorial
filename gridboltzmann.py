@@ -11,12 +11,13 @@ import boltzmann
 
 class GridMoneyModel(boltzmann.MoneyModel):
 
-    def __init__(self, N, width, height):
+    def __init__(self, N, width, height, max_iter):
         logging.debug("GridMoneyModel constructor.")
         super().__init__(N, agent_class=GridMoneyAgent)
         self.grid = SingleGrid(width, height, False)
         self.width = width
         self.height = height
+        self.max_iter = max_iter   # (Solely used for plotting captions.)
         
         for a in self.schedule.agents:
             self.grid.place_agent(a, self.grid.find_empty())
@@ -31,8 +32,7 @@ class GridMoneyModel(boltzmann.MoneyModel):
         fig = plt.imshow(agent_locs, interpolation='nearest')
         fig.axes.get_xaxis().set_visible(False)
         fig.axes.get_yaxis().set_visible(False)
-        plt.colorbar().remove()
-        plt.title("Iteration {} of {}".format(self.num_steps+1, "lots"))
+        plt.title("Iteration {} of {}".format(self.num_steps, self.max_iter))
         plt.savefig("/tmp/agent_locs{:03d}.png".format(self.num_steps))
         plt.close()
 
@@ -94,5 +94,6 @@ class GridMoneyAgent(boltzmann.MoneyAgent):
         return "GridMoneyAgent({},{})".format(self.unique_id,m.__repr__())
 
 if __name__ == "__main__":
-    m = GridMoneyModel(20,20,20)
-    m.run(50)
+    max_iter = 100
+    m = GridMoneyModel(50,12,12,max_iter)
+    m.run(max_iter)
