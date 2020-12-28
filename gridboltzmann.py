@@ -28,10 +28,12 @@ class GridMoneyModel(boltzmann.MoneyModel):
         for cell in self.grid.coord_iter():
             cell_content, x, y = cell
             if cell_content:
-                agent_locs[x][y] = 1
+                agent_locs[x][y] = cell_content.wealth
         fig = plt.imshow(agent_locs, interpolation='nearest')
         fig.axes.get_xaxis().set_visible(False)
         fig.axes.get_yaxis().set_visible(False)
+        plt.colorbar()
+        plt.clim(0,10)
         plt.title("Iteration {} of {}".format(self.num_steps, self.max_iter))
         plt.savefig("/tmp/agent_locs{:03d}.png".format(self.num_steps))
         plt.close()
