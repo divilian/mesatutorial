@@ -35,25 +35,28 @@ class MoneyAgent(Agent):
     def step(self):
         logging.info("Running agent {}! (currently ${})".format(
             self.unique_id, self.wealth))
-        # self.wealth += 1     Justin: increase $$ flat rate to agents
-        # self.wealth *= 1.05  Brandon: wealth has investment value
+        self.wealth *= (1+self.model.int_rate)  # Brandon: has investment value
         if self.wealth > 0:
             self.give_money()
+        self.wealth += self.model.ubi           # Justin: $$ flat rate
 
     def give_money(self):
         other = self.random.choice(self.model.schedule.agents)
         if self == other:
             logging.info("Trading with myself!")
-        other.wealth += 1
-        self.wealth -= 1
+        to_give = max(self.wealth, 1)
+        other.wealth += to_give
+        self.wealth -= to_give
 
 
 class MoneyModel(Model):
 
-    def __init__(self, N, agent_class=MoneyAgent):
+    def __init__(self, N, agent_class, int_rate, ubi):
         self.num_agents = N
         self.schedule = RandomActivation(self)
         self.num_steps = 0
+        self.int_rate = int_rate
+        self.ubi = ubi
         for i in range(self.num_agents):
             a = agent_class(i, self)
             self.schedule.add(a)

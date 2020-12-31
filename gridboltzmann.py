@@ -11,9 +11,9 @@ import boltzmann
 
 class GridMoneyModel(boltzmann.MoneyModel):
 
-    def __init__(self, N, width, height, max_iter):
+    def __init__(self, N, int_rate, ubi, width, height, max_iter):
         logging.debug("GridMoneyModel constructor.")
-        super().__init__(N, agent_class=GridMoneyAgent)
+        super().__init__(N, GridMoneyAgent, int_rate, ubi)
         self.grid = SingleGrid(width, height, False)
         self.width = width
         self.height = height
@@ -72,8 +72,9 @@ class GridMoneyAgent(boltzmann.MoneyAgent):
         logging.info("Agent {} gives to {}.".format(self.unique_id, other))
         if self == other:
             logging.critical("ERROR: Trading with myself!")
-        other.wealth += 1
-        self.wealth -= 1
+        to_give = max(self.wealth, 1)
+        other.wealth += to_give
+        self.wealth -= to_give
 
     def move(self):
         possible_moves = [ c for c in self.model.grid.get_neighborhood(
@@ -97,5 +98,5 @@ class GridMoneyAgent(boltzmann.MoneyAgent):
 
 if __name__ == "__main__":
     max_iter = 100
-    m = GridMoneyModel(50,12,12,max_iter)
+    m = GridMoneyModel(50,12,12,0,0,max_iter)
     m.run(max_iter)
