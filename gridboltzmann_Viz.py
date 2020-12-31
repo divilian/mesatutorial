@@ -25,5 +25,5 @@ if __name__ == "__main__":
 
     server = ModularServer(GridMoneyModel, [grid,chart], "Grid Boltzmann",
         { "N":N, "width":width, "height":height, "max_iter":100 })
-    server.port = 8521
+    server.port = 8081
     server.launch()
