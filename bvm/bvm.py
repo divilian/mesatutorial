@@ -33,7 +33,7 @@ class VoterAgent(Agent):
         logging.debug("Agent {} is {}.".format(self.unique_id, self.opinion))
 
     def step(self):
-        logging.info("Running agent {}...".format(self.unique_id))
+        logging.debug("Running agent {}...".format(self.unique_id))
         neis = self.model.G.adj[self.unique_id]
         if len(neis) == 0:
             logging.debug("  Agent {} has no neighbors!".format(self.unique_id))
@@ -60,10 +60,18 @@ def frac_with_opinion(agents, opinion):
         for a in agents ]) / len(agents)
 
 
+def iters_to_converge(model):
+    return model.num_steps
+
+def compute_lambda(model):
+    return model.num_agents * model.p
+
 class SocialWorld(Model):
 
     def __init__(self, N, p, agent_class):
+        logging.info("Initializing SocialWorld({},{})...".format(N,p))
         self.num_agents = N
+        self.p = p
         self.schedule = RandomActivation(self)
         self.num_steps = 0
         self.G = nx.erdos_renyi_graph(N, p)
@@ -95,7 +103,7 @@ class SocialWorld(Model):
                 .format(self.schedule.agents[0].opinion, self.num_steps))
             self.running = False
         self.num_steps += 1
-        logging.info("Iteration {}...".format(self.num_steps))
+        logging.debug("Iteration {}...".format(self.num_steps))
         self.datacollector.collect(self)
         self.schedule.step()
 
@@ -121,4 +129,21 @@ if __name__ == "__main__":
     else:
 
         # Batch simulation run.
-        print("Batch not implemented yet.")
+        fixed = {"p":.2, "agent_class":VoterAgent}
+        variable_params = {"N": np.arange(10,100,5)}
+
+        batch_run = BatchRunner(SocialWorld, variable_params, fixed,
+            iterations=10, max_steps=1000,
+            model_reporters={"lambda":compute_lambda,
+                "itersToConverge": iters_to_converge})
+
+        batch_run.run_all()
+        df = batch_run.get_model_vars_dataframe()
+        plt.figure()
+        plt.scatter(df["lambda"], df.itersToConverge)
+        plt.show()
+
+        dfagg = df.groupby("lambda").itersToConverge.mean()
+        plt.figure()
+        plt.plot(dfagg.index,dfagg)
+        plt.show()
