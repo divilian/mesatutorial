@@ -12,9 +12,6 @@ import logging
 
 from bvm import VoterAgent, SocialWorld, Opinion, iters_to_converge
 
-def suite_data(model):
-    return model.df.groupby("N").itersToConverge.mean()
-
 class SocialWorldSuite(Model):
 
     def __init__(self, N1, N2, p, suite_size):
@@ -26,12 +23,6 @@ class SocialWorldSuite(Model):
         self.N1 = N1
         self.N2 = N2
         self.suite_size = suite_size
-        self.datacollector = DataCollector(
-            agent_reporters={},
-            model_reporters={
-                "itersToConverge": suite_data
-            }
-        )
         self.running = True
         self.df = pd.DataFrame({"N":[],"itersToConverge":[]})
 
@@ -51,7 +42,6 @@ class SocialWorldSuite(Model):
         self.running = False
         self.df = batch_run.get_model_vars_dataframe()
 
-        self.datacollector.collect(self)
 
     def run(self, num_steps=50):
         for _ in range(num_steps):
