@@ -68,7 +68,7 @@ def compute_lambda(model):
 
 class SocialWorld(Model):
 
-    def __init__(self, N, p, agent_class):
+    def __init__(self, N, p):
         logging.info("Initializing SocialWorld({},{})...".format(N,p))
         self.num_agents = N
         self.p = p
@@ -83,7 +83,7 @@ class SocialWorld(Model):
         # VoterAgent, but can't figure out how to do this in networkx when
         # generating a random graph.)
         for i in range(self.num_agents):
-            a = agent_class(i, self)
+            a = VoterAgent(i, self)
             self.G.nodes[i]["agent"] = a
             self.schedule.add(a)
         self.running = True   # could set this to stop prematurely
@@ -99,7 +99,7 @@ class SocialWorld(Model):
             return
         if all([ a.opinion == self.schedule.agents[0].opinion
                 for a in self.schedule.agents[1:] ]):
-            logging.critical("Simulation converged to {} in {} iterations."
+            logging.info("Simulation converged to {} in {} iterations."
                 .format(self.schedule.agents[0].opinion, self.num_steps))
             self.running = False
         self.num_steps += 1
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     else:
 
         # Batch simulation run.
-        fixed = {"p":.2, "agent_class":VoterAgent}
+        fixed = {"p":.2}
         variable_params = {"N": np.arange(10,100,5)}
 
         batch_run = BatchRunner(SocialWorld, variable_params, fixed,

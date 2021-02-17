@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     server = ModularServer(SocialWorld, [net, frac_red],
         "BVM",
-        { "N":N, "p":p,
-        "agent_class":VoterAgent })
+        { "N":N, "p":p })
+        
     server.port = 8081
     server.launch()
