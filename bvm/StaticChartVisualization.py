@@ -19,5 +19,8 @@ class StaticChartModule(VisualizationElement):
         print("self.js_code = {}".format(self.js_code))
 
     def render(self, model):
-        return [ float(d) for d in 
-            model.df.groupby("N").itersToConverge.mean().tolist() ]
+        return [ model.df.N.unique().tolist(),
+            [ float(d) for d in 
+                model.df.groupby("N").itersToConverge.mean().tolist()
+            ]
+        ]

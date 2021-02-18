@@ -1,6 +1,8 @@
 
 # Things I don't know how to get Mesa to do out of the box:
 # - a "double slider" (or whatever it's called) in UserSettableParameter
+# - show a meaningful progress bar as the suite executes (i.e., update the text
+# in SocialWorldSuite.msg while the BatchRunner is executing).
 
 import numpy as np
 import pandas as pd

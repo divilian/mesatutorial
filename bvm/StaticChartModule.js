@@ -2,7 +2,7 @@
 var StaticChartModule = function(width, height, name) {
 
     var canvas_tag = "<canvas width='" + width + "' height='" + height + "' ";
-    canvas_tag += "style='border:1px dotted'></canvas>";
+    canvas_tag += "style='border:2px solid'></canvas>";
     var canvas = $(canvas_tag)[0];
     $("#elements").append(canvas);
     var context = canvas.getContext("2d");
@@ -13,9 +13,6 @@ var StaticChartModule = function(width, height, name) {
     }];
 
     var labels = [];
-    for (var i=10; i<110; i+=10) {
-        labels.push(i)
-    }
     
     var data = {
         labels: labels,
@@ -24,8 +21,9 @@ var StaticChartModule = function(width, height, name) {
 
     var chart = new Chart(context, {type:'line', data:data});
 
-    this.render = function(data) {
-        datasets[0].data = data;
+    this.render = function(d) {
+        datasets[0].data = d[1];
+        data.labels = d[0];
         chart.update();
     };
 
